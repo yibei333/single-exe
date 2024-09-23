@@ -7,6 +7,7 @@ public static class IconExtension
 {
     public static void SaveIcon(string sourceFile, string iconPath)
     {
+        if (Environment.OSVersion.Platform != PlatformID.Win32NT) throw new NotSupportedException("只支持windows系统");
         nint? module = null;
 
         try
