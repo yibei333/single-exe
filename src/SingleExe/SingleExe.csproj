@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net472</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<LangVersion>10</LangVersion>
+		<ApplicationIcon>favicon.ico</ApplicationIcon>
+		<AssemblyName>安装程序</AssemblyName>
+		<DebugType>none</DebugType>
+		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="Source\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="favicon.ico" />
+	</ItemGroup>
+</Project>
