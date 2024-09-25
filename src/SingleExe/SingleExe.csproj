@@ -7,7 +7,7 @@
 		<UseWPF>true</UseWPF>
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
-		<AssemblyName>安装程序</AssemblyName>
+		<AssemblyName>myapp</AssemblyName>
 		<DebugType>none</DebugType>
 		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
 	</PropertyGroup>

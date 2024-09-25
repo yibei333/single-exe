@@ -27,6 +27,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CliFx" Version="2.3.5" />
+		<PackageReference Include="SharpDevLib" Version="2.0.0" />
 		<PackageReference Include="System.Drawing.Common" Version="8.0.8" />
 	</ItemGroup>
 
@@ -48,4 +49,11 @@
 			<PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="..\SingleExe\**\*" Link="Template\$([System.String]::new('%(RelativeDir)').Replace('..\SingleExe',''))%(FileName)%(Extension)" Exclude="..\SingleExe\bin\**\*;..\SingleExe\obj\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+
 </Project>
