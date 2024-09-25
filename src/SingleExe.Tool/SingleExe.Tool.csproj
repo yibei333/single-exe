@@ -1,15 +1,51 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
-  <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.9.1" />
-    <PackageReference Include="System.Drawing.Common" Version="8.0.8" />
-  </ItemGroup>
+		<Authors>developer333</Authors>
+		<Description>构建单个可执行文件</Description>
+		<Copyright>developer333</Copyright>
+		<PackageId>SingleExe.Tool</PackageId>
+		<PackageProjectUrl>https://github.com/yibei333/single-exe.git</PackageProjectUrl>
+		<PackageIcon>icon.png</PackageIcon>
+		<RepositoryUrl>https://github.com/yibei333/single-exe.git</RepositoryUrl>
+		<PackageTags>single executable</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<Version>1.0.0.2-alpha</Version>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>single-exe</ToolCommandName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CliFx" Version="2.3.5" />
+		<PackageReference Include="System.Drawing.Common" Version="8.0.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="../../assets/icon.png" Link="Assets\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="../../LICENSE" Link="Assets\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="../../README.md" Link="Assets\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="../../assets/version.txt" Link="Assets\version.txt">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

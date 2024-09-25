@@ -1,0 +1,36 @@
+name: release
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - assets/version.txt
+      
+jobs:
+  build:
+    permissions: write-all
+    runs-on: windows-latest 
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: SetVersion
+      id: SetVersion
+      run: |
+        echo "std20version=$(cat assets/version.txt)" >> $ENV:GITHUB_OUTPUT
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Build
+      run: dotnet build --configuration Release "src/SingleExe.Tool/SingleExe.Tool.csproj"
+
+    - name: Pack
+      run: dotnet pack --configuration Release --output "pack" "src/SingleExe.Tool/SingleExe.Tool.csproj"
+
+    - name: Push
+      run: dotnet nuget push "pack/SingleExe.Tool.${{steps.SetVersion.outputs.std20version}}.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate

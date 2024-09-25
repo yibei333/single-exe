@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace SingleExe.Tool.Extensions;
 
-public static class IconExtension
+internal static class IconExtension
 {
     public static void SaveIcon(string sourceFile, string iconPath)
     {
