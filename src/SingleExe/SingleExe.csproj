@@ -13,9 +13,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="Source\**\*">
-			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
-		</EmbeddedResource>
+	  <EmbeddedResource Include="Source.zip" />
 	</ItemGroup>
 
 	<ItemGroup>

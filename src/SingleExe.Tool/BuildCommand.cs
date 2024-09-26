@@ -4,6 +4,7 @@ using CliFx.Infrastructure;
 using SharpDevLib;
 using SingleExe.Tool.Extensions;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 
@@ -144,9 +145,9 @@ public class BuildCommand : ICommand
     {
         var appXamlCs = tempFolder.CombinePath("App.xaml.cs");
         var appXamlText = File.ReadAllText(appXamlCs);
-        appXamlText = appXamlText.Replace("Name = \"myapp\"", $"Name = \"{Name}\"");
+        appXamlText = appXamlText.Replace("Name = \"SampleApp\"", $"Name = \"{Name}\"");
         appXamlText = appXamlText.Replace("Version = \"1.0.0\"", $"Version = \"{AppVersion}\"");
-        appXamlText = appXamlText.Replace("EntryPoint = \"myapp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
+        appXamlText = appXamlText.Replace("EntryPoint = \"SampleApp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
         File.WriteAllText(appXamlCs, appXamlText);
 
         var csproj = tempFolder.CombinePath("SingleExe.csproj");
@@ -157,10 +158,9 @@ public class BuildCommand : ICommand
 
     void PrepareBinaryFiles(IConsole console, string tempFolder)
     {
-        var targetBinaryFolder = tempFolder.CombinePath("Source");
-        if (Directory.Exists(targetBinaryFolder)) Directory.Delete(targetBinaryFolder, true);
-        targetBinaryFolder.CreateDirectoryIfNotExist();
-        BinaryFolder.CopyToDirectory(targetBinaryFolder, true, file => console.Output.WriteLine($"拷贝文件:{file.Name}"));
+        var sourceZipFile = tempFolder.CombinePath("Source.zip");
+        if (File.Exists(sourceZipFile)) File.Delete(sourceZipFile);
+        ZipFile.CreateFromDirectory(BinaryFolder, sourceZipFile);
 
         //icon
         var targetIconPath = tempFolder.CombinePath("favicon.ico");

@@ -1,50 +1,22 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
+using System.IO.Compression;
 using System.Reflection;
 using System.Windows;
 
 namespace SingleExe;
 
-public partial class MainWindow : Window, INotifyPropertyChanged
+public partial class MainWindow : Window
 {
-    double _progress;
-    string _filename;
-
     public MainWindow()
     {
         InitializeComponent();
         StartAsync();
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    public double Progress
-    {
-        get => _progress;
-        set
-        {
-            if (_progress == value) return;
-            _progress = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Progress)));
-        }
-    }
-
-    public string Filename
-    {
-        get => _filename;
-        set
-        {
-            if (_filename == value) return;
-            _filename = value;
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Filename)));
-        }
-    }
-
     async void StartAsync()
     {
         await Task.Yield();
-        var assembly = Assembly.GetExecutingAssembly();
         try
         {
             var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"{App.Name}\\{App.Version}");
@@ -53,30 +25,29 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             if (!File.Exists(integrityFile) || !File.Exists(exePath))
             {
                 if (!Directory.Exists(tempFolder)) Directory.CreateDirectory(tempFolder);
+                var zipFile = Path.Combine(tempFolder, "Source.zip");
+                if (File.Exists(zipFile)) File.Delete(zipFile);
 
-                var names = assembly.GetManifestResourceNames().Where(x => x.StartsWith("Source")).ToList();
-                var totalCount = names.Count;
-                var index = 0;
-                foreach (var name in names)
-                {
-                    index++;
-                    Progress = Math.Round(index * 100.0 / totalCount, 2);
-                    var stream = assembly.GetManifestResourceStream(name);
-                    if (stream != null)
-                    {
-                        var path = Path.Combine(tempFolder, TrimStart(name, "Source\\"));
-                        Filename = path;
-                        var directoryName = new FileInfo(path).DirectoryName;
-                        if (!Directory.Exists(directoryName)) Directory.CreateDirectory(directoryName);
-                        using var targetStream = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
-                        stream.CopyTo(targetStream);
-                        targetStream.Flush();
-                        stream.Dispose();
-                    }
-                }
+                var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"SingleExe.Source.zip");
+                var zipStream = new FileStream(zipFile, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite);
+                stream.CopyTo(zipStream);
+                zipStream.Flush();
+                zipStream.Dispose();
+                stream.Dispose();
+                ZipFile.ExtractToDirectory(zipFile, tempFolder);
+                File.Delete(zipFile);
             }
 
-            StartProcess(exePath);
+            if (!File.Exists(exePath)) throw new Exception($"file not found:{exePath}");
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo(exePath)
+                {
+                    WorkingDirectory = new FileInfo(exePath).DirectoryName,
+                }
+            };
+            process.Start();
+
             if (!File.Exists(integrityFile)) File.Create(integrityFile).Close();
             Application.Current.Shutdown();
         }
@@ -85,27 +56,5 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             MessageBox.Show(ex.Message);
             Application.Current.Shutdown(1);
         }
-    }
-
-    void StartProcess(string path)
-    {
-        if (!File.Exists(path)) throw new Exception($"file not found:{path}");
-        var process = new Process
-        {
-            StartInfo = new ProcessStartInfo(path)
-            {
-                WorkingDirectory = new FileInfo(path).DirectoryName,
-            }
-        };
-        process.Start();
-    }
-
-    static string TrimStart(string source, string pattern)
-    {
-        if (source.StartsWith(pattern))
-        {
-            return source.Substring(pattern.Length);
-        }
-        return source;
     }
 }
