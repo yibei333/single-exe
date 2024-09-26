@@ -3,11 +3,9 @@ using CliFx.Attributes;
 using CliFx.Infrastructure;
 using SharpDevLib;
 using SingleExe.Tool.Extensions;
-using System;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SingleExe.Tool;
 
@@ -20,37 +18,37 @@ public class BuildCommand : ICommand
     /// <summary>
     /// app name
     /// </summary>
-    [CommandOption("name", 'n', IsRequired = true, Description = "应用名称")]
+    [CommandOption("name", 'n', IsRequired = false, Description = "应用名称,默认为【entry-point】的文件名")]
     public string Name { get; set; }
 
     /// <summary>
     /// output file path
     /// </summary>
-    [CommandOption("output", 'o', IsRequired = true, Description = "输出文件路径")]
+    [CommandOption("output", 'o', IsRequired = false, Description = "输出文件路径,默认为【binary-folder】上级目录")]
     public string Output { get; set; }
 
     /// <summary>
     /// app version
     /// </summary>
-    [CommandOption("ver", 'v', IsRequired = true, Description = "应用版本,如1.0.0.0")]
-    public string Version { get; set; }
+    [CommandOption("app-version", 'v', IsRequired = false, Description = "应用版本,默认为1.0.0.0")]
+    public string AppVersion { get; set; }
 
     /// <summary>
     /// app binary folder
     /// </summary>
-    [CommandOption("binary", 'b', IsRequired = true, Description = "应用路径")]
+    [CommandOption("binary-folder", 'b', IsRequired = true, Description = "应用目录")]
     public string BinaryFolder { get; set; }
 
     /// <summary>
     /// app entrypoint file path
     /// </summary>
-    [CommandOption("entrypoint", 'e', IsRequired = true, Description = "可执行文件路径,应用路径的相对地址")]
+    [CommandOption("entry-point", 'e', IsRequired = true, Description = "可执行文件路径,【binary-folder】的相对地址")]
     public string EntrypointPath { get; set; }
 
     /// <summary>
     /// icon file path
     /// </summary>
-    [CommandOption("icon", 'i', IsRequired = false, Description = "图标路径,如果为空将尝试从EntryPointPath中提取")]
+    [CommandOption("icon", 'i', IsRequired = false, Description = "图标路径,如果为空将尝试从【entry-point】中提取,如果提取失败则用默认图标")]
     public string IconPath { get; set; }
 
     /// <summary>
@@ -82,8 +80,6 @@ public class BuildCommand : ICommand
             PrepareBinaryFiles(console, tempFolder);
             BuildProject(console, tempFolder);
             CopyFileToTarget(console, tempFolder);
-
-            //todo:sign
         }
         catch (Exception ex)
         {
@@ -95,6 +91,7 @@ public class BuildCommand : ICommand
 
     bool EnsureParameterCorrect(IConsole console)
     {
+
         if (!Directory.Exists(BinaryFolder))
         {
             console.Output.WriteLine($"directory '{BinaryFolder}' not found");
@@ -108,15 +105,19 @@ public class BuildCommand : ICommand
             return false;
         }
 
+        if (Name.IsNullOrWhiteSpace()) Name = entrypointPath.GetFileName(false);
+        if (Output.IsNullOrWhiteSpace()) Output = new DirectoryInfo(BinaryFolder).Parent.FullName;
+        if (AppVersion.IsNullOrWhiteSpace()) AppVersion = "1.0.0.0";
+
         return true;
     }
 
     string PrepareProject(IConsole console)
     {
-        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"SingleExe\\{Name}\\{Version}");
+        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"SingleExe\\{Name}\\{AppVersion}");
         tempFolder.CreateDirectoryIfNotExist();
         CopyProjectFiles(console, tempFolder);
-        ReplaceProjectInformation(console, tempFolder);
+        ReplaceProjectInformation(tempFolder);
         return tempFolder;
     }
 
@@ -139,12 +140,12 @@ public class BuildCommand : ICommand
         }
     }
 
-    void ReplaceProjectInformation(IConsole console, string tempFolder)
+    void ReplaceProjectInformation(string tempFolder)
     {
         var appXamlCs = tempFolder.CombinePath("App.xaml.cs");
         var appXamlText = File.ReadAllText(appXamlCs);
         appXamlText = appXamlText.Replace("Name = \"myapp\"", $"Name = \"{Name}\"");
-        appXamlText = appXamlText.Replace("Version = \"1.0.0\"", $"Version = \"{Version}\"");
+        appXamlText = appXamlText.Replace("Version = \"1.0.0\"", $"Version = \"{AppVersion}\"");
         appXamlText = appXamlText.Replace("EntryPoint = \"myapp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
         File.WriteAllText(appXamlCs, appXamlText);
 
@@ -181,7 +182,7 @@ public class BuildCommand : ICommand
         }
     }
 
-    void BuildProject(IConsole console, string tempFolder)
+    static void BuildProject(IConsole console, string tempFolder)
     {
         var process = new Process
         {
@@ -198,7 +199,7 @@ public class BuildCommand : ICommand
         var filePath = tempFolder.CombinePath($"bin\\Release\\net472\\{fileName}");
         Output.CreateDirectoryIfNotExist();
         var targetPath = Output.CombinePath(fileName);
-        File.Copy(filePath, targetPath);
+        File.Copy(filePath, targetPath, true);
         console.Output.WriteLine($"生成成功,文件位置'{targetPath}'");
     }
 }

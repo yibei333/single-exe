@@ -53,7 +53,7 @@ internal static class IconExtension
         return iconResInfos;
     }
 
-    static void WriteIconData(IntPtr hModule, ICONRESINF[] iconResInfos, Stream stream)
+    static void WriteIconData(IntPtr hModule, ICONRESINF[] iconResInfos, FileStream fileStream)
     {
         var address = Marshal.SizeOf(typeof(ICONFILEHEAD)) + Marshal.SizeOf(typeof(ICONFILEINF)) * iconResInfos.Length;
 
@@ -81,16 +81,16 @@ internal static class IconExtension
             Count = (ushort)iconResInfos.Length
         };
         var iconFileHeadBytes = StructureToBytes(iconFileHead);
-        stream.Write(iconFileHeadBytes, 0, iconFileHeadBytes.Length);
+        fileStream.Write(iconFileHeadBytes, 0, iconFileHeadBytes.Length);
         iconFiles.ForEach(iconFile =>
         {
             var bytes = StructureToBytes(iconFile.iconFileInf);
-            stream.Write(bytes, 0, bytes.Length);
+            fileStream.Write(bytes, 0, bytes.Length);
         });
 
         iconFiles.ForEach(iconFile =>
         {
-            stream.Write(iconFile.iconBytes, 0, iconFile.iconBytes.Length);
+            fileStream.Write(iconFile.iconBytes, 0, iconFile.iconBytes.Length);
         });
     }
 
