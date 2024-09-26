@@ -34,5 +34,5 @@ OPTIONS
 #### 4. 示例
 
 ``` shell
-single-exe -b yourPath/yourAppRootFolder -e myApp.exe
+single-exe -b yourPath/yourAppRootFolder -e yourApp.exe -o outputDirectory
 ```
