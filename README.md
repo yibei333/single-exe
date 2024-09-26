@@ -2,13 +2,13 @@
 将你的应用打包为单个可执行文件(exe)，以便于分发。
 
 ## 截图
-
+![screenshoot](https://github.com/yibei333/single-exe/blob/main/assets/screenshot.gif?raw=true)
 
 ## 使用
 
 #### 1. 前置条件
 
-* 安装了.NET8 SDK
+* 安装了[.NET8 SDK](https://dotnet.microsoft.com/zh-cn/download/dotnet/8.0)
 
 #### 2. 安装工具
 
