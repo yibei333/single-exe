@@ -1,4 +1,4 @@
-# single-exe [![](https://github.com/yibei333/single-exe/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/yibei333/single-exe/actions/workflows/release.yml)|
+# single-exe [![](https://github.com/yibei333/single-exe/actions/workflows/release.yml/badge.svg?branch=main)](https://github.com/yibei333/single-exe/actions/workflows/release.yml)
 将你的应用打包为单个可执行文件(exe)，以便于分发。
 
 ## 截图
