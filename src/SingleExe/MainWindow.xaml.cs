@@ -41,7 +41,7 @@ public partial class MainWindow : Window
             if (!File.Exists(exePath)) throw new Exception($"file not found:{exePath}");
             var process = new Process
             {
-                StartInfo = new ProcessStartInfo(exePath)
+                StartInfo = new ProcessStartInfo(exePath,string.Join(" ",Environment.GetCommandLineArgs()))
                 {
                     WorkingDirectory = new FileInfo(exePath).DirectoryName,
                 }
