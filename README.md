@@ -16,7 +16,6 @@
 dotnet tool install --global SingleExe.Tool
 ```
 
-
 #### 3.USAGE
 ``` shell
 single-exe --binary-folder <value> --entry-point <value> [options]

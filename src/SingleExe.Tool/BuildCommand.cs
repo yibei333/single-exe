@@ -158,7 +158,7 @@ public class BuildCommand : ICommand
     void PrepareBinaryFiles(IConsole console, string tempFolder)
     {
         var targetBinaryFolder = tempFolder.CombinePath("Source");
-        Directory.Delete(targetBinaryFolder, true);
+        if (Directory.Exists(targetBinaryFolder)) Directory.Delete(targetBinaryFolder, true);
         targetBinaryFolder.CreateDirectoryIfNotExist();
         BinaryFolder.CopyToDirectory(targetBinaryFolder, true, file => console.Output.WriteLine($"拷贝文件:{file.Name}"));
 
