@@ -13,10 +13,10 @@
 #### 2. 安装工具
 
 ``` shell
-dotnet tool install --global SingleExe.Tool
+dotnet tool install --global single-exe
 ```
 
-#### 3.USAGE
+#### 3.命令行
 ``` shell
 single-exe --binary-folder <value> --entry-point <value> [options]
 
@@ -34,5 +34,5 @@ OPTIONS
 #### 4. 示例
 
 ``` shell
-single-exe -b yourPath/yourAppRootFolder -e yourApp.exe -o outputDirectory
+single-exe -b yourPath/yourAppRootFolder -e yourApp.exe -o outputDirectory -n mySingleApp
 ```
