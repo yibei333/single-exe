@@ -9,7 +9,7 @@
 		<Authors>developer333</Authors>
 		<Description>构建单个可执行文件</Description>
 		<Copyright>developer333</Copyright>
-		<PackageId>SingleExe.Tool</PackageId>
+		<PackageId>single-exe</PackageId>
 		<PackageProjectUrl>https://github.com/yibei333/single-exe.git</PackageProjectUrl>
 		<PackageIcon>icon.png</PackageIcon>
 		<RepositoryUrl>https://github.com/yibei333/single-exe.git</RepositoryUrl>
@@ -17,10 +17,10 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<Version>1.0.5</Version>
+		<Version>1.0.0.2-alpha</Version>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<PackageReadmeFile>Nuget.md</PackageReadmeFile>
-
+		<AssemblyName>single-exe</AssemblyName>
 		<PackAsTool>true</PackAsTool>
 		<ToolCommandName>single-exe</ToolCommandName>
 	</PropertyGroup>
