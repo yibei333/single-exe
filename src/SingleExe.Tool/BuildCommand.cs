@@ -198,7 +198,7 @@ public class BuildCommand : ICommand
         var fileName = EntrypointPath.GetFileName();
         var filePath = tempFolder.CombinePath($"bin\\Release\\net472\\{fileName}");
         Output.CreateDirectoryIfNotExist();
-        var targetPath = Output.CombinePath(fileName);
+        var targetPath = Output.CombinePath($"{Name}.exe");
         File.Copy(filePath, targetPath, true);
         console.WriteSuccess($"生成成功,文件位置'{targetPath}'");
     }
