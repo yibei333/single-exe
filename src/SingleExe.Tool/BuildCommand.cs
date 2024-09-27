@@ -84,7 +84,7 @@ public class BuildCommand : ICommand
         }
         catch (Exception ex)
         {
-            console.Error.WriteLine(ex.Message);
+            console.WriteError(ex.Message);
             Environment.Exit(0);
         }
         await Task.CompletedTask;
@@ -95,14 +95,14 @@ public class BuildCommand : ICommand
 
         if (!Directory.Exists(BinaryFolder))
         {
-            console.Output.WriteLine($"directory '{BinaryFolder}' not found");
+            console.WriteError($"directory '{BinaryFolder}' not found");
             return false;
         }
 
         var entrypointPath = Path.Combine(BinaryFolder, EntrypointPath);
         if (!File.Exists(entrypointPath))
         {
-            console.Output.WriteLine($"file '{entrypointPath}' not found");
+            console.WriteError($"file '{entrypointPath}' not found");
             return false;
         }
 
@@ -129,7 +129,7 @@ public class BuildCommand : ICommand
 
         foreach (var name in names)
         {
-            console.Output.WriteLine($"准备文件:{name}");
+            console.WriteInformation($"准备文件:{name}");
             var stream = assembly.GetManifestResourceStream(name);
             if (stream != null)
             {
@@ -176,8 +176,8 @@ public class BuildCommand : ICommand
             }
             catch (Exception ex)
             {
-                console.Output.WriteLine($"尝试从EntryPoint中获取Icon失败:{ex.Message}");
-                console.Output.WriteLine("使用默认图标");
+                console.WriteWarning($"尝试从EntryPoint中获取Icon失败:{ex.Message}");
+                console.WriteInformation("使用默认图标");
             }
         }
     }
@@ -188,7 +188,7 @@ public class BuildCommand : ICommand
         {
             StartInfo = new ProcessStartInfo("dotnet", $"build -c Release {tempFolder}")
         };
-        process.OutputDataReceived += (s, e) => console.Output.WriteLine(e.Data);
+        process.OutputDataReceived += (s, e) => console.WriteInformation(e.Data);
         process.Start();
         process.WaitForExit();
     }
@@ -200,6 +200,6 @@ public class BuildCommand : ICommand
         Output.CreateDirectoryIfNotExist();
         var targetPath = Output.CombinePath(fileName);
         File.Copy(filePath, targetPath, true);
-        console.Output.WriteLine($"生成成功,文件位置'{targetPath}'");
+        console.WriteSuccess($"生成成功,文件位置'{targetPath}'");
     }
 }

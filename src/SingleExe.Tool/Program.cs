@@ -1,6 +1,8 @@
 ﻿using CliFx;
 
-await new CliApplicationBuilder()
-           .AddCommandsFromThisAssembly()
-           .Build()
-           .RunAsync();
+var builder = new CliApplicationBuilder();
+builder.AddCommandsFromThisAssembly();
+builder.SetExecutableName("single-exe");
+
+var app = builder.Build();
+await app.RunAsync();
