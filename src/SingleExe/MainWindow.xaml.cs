@@ -24,6 +24,7 @@ public partial class MainWindow : Window
             var exePath = Path.Combine(tempFolder, App.EntryPoint);
             if (!File.Exists(integrityFile) || !File.Exists(exePath))
             {
+                if (Directory.Exists(tempFolder)) Directory.Delete(tempFolder, true);
                 if (!Directory.Exists(tempFolder)) Directory.CreateDirectory(tempFolder);
                 var zipFile = Path.Combine(tempFolder, "Source.zip");
                 if (File.Exists(zipFile)) File.Delete(zipFile);
@@ -41,7 +42,7 @@ public partial class MainWindow : Window
             if (!File.Exists(exePath)) throw new Exception($"file not found:{exePath}");
             var process = new Process
             {
-                StartInfo = new ProcessStartInfo(exePath,string.Join(" ",Environment.GetCommandLineArgs()))
+                StartInfo = new ProcessStartInfo(exePath, string.Join(" ", Environment.GetCommandLineArgs()))
                 {
                     WorkingDirectory = new FileInfo(exePath).DirectoryName,
                 }

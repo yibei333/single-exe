@@ -152,7 +152,7 @@ public class BuildCommand : ICommand
 
         var csproj = tempFolder.CombinePath("SingleExe.csproj");
         var csprojText = File.ReadAllText(csproj);
-        csprojText = csprojText.Replace("<AssemblyName>myapp</AssemblyName>", $"<AssemblyName>{EntrypointPath.GetFileName(false)}</AssemblyName>");
+        csprojText = csprojText.Replace("<AssemblyName>myapp</AssemblyName>", $"<AssemblyName>{Name}</AssemblyName>");
         File.WriteAllText(csproj, csprojText);
     }
 
@@ -195,8 +195,7 @@ public class BuildCommand : ICommand
 
     void CopyFileToTarget(IConsole console, string tempFolder)
     {
-        var fileName = EntrypointPath.GetFileName();
-        var filePath = tempFolder.CombinePath($"bin\\Release\\net472\\{fileName}");
+        var filePath = tempFolder.CombinePath($"bin\\Release\\net472\\{Name}.exe");
         Output.CreateDirectoryIfNotExist();
         var targetPath = Output.CombinePath($"{Name}.exe");
         File.Copy(filePath, targetPath, true);
