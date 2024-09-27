@@ -33,4 +33,4 @@ jobs:
       run: dotnet pack --configuration Release --output "pack" "src/SingleExe.Tool/SingleExe.Tool.csproj"
 
     - name: Push
-      run: dotnet nuget push "pack/SingleExe.Tool.${{steps.SetVersion.outputs.std20version}}.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
+      run: dotnet nuget push "pack/single-exe.${{steps.SetVersion.outputs.std20version}}.nupkg" --api-key "${{ secrets.NUGET_APIKEY }}" --source https://api.nuget.org/v3/index.json --skip-duplicate
