@@ -45,6 +45,7 @@ public partial class MainWindow : Window
                 StartInfo = new ProcessStartInfo(exePath, string.Join(" ", Environment.GetCommandLineArgs()))
                 {
                     WorkingDirectory = new FileInfo(exePath).DirectoryName,
+                    CreateNoWindow = true
                 }
             };
             process.Start();
