@@ -53,6 +53,14 @@ public class BuildCommand : ICommand
     public string IconPath { get; set; }
 
     /// <summary>
+    /// is command-line
+    /// </summary>
+    [CommandOption("command-line", 'c', IsRequired = false, Description = "是否为控制台应用程序")]
+    public bool CommandLine { get; set; }
+
+    string ReferenceName => CommandLine ? "SingleExe.ConsoleApp" : "SingleExe.WpfApp";
+
+    /// <summary>
     /// ovveride tostring
     /// </summary>
     /// <returns>string</returns>
@@ -80,7 +88,6 @@ public class BuildCommand : ICommand
             var tempFolder = PrepareProject(console);
             PrepareBinaryFiles(console, tempFolder);
             BuildProject(console, tempFolder);
-            CopyFileToTarget(console, tempFolder);
             CopyFileToTarget(console, tempFolder);
             Clean(console, tempFolder);
         }
@@ -124,10 +131,10 @@ public class BuildCommand : ICommand
         return tempFolder;
     }
 
-    static void CopyProjectFiles(IConsole console, string tempFolder)
+    void CopyProjectFiles(IConsole console, string tempFolder)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        var names = assembly.GetManifestResourceNames().ToList();
+        var names = assembly.GetManifestResourceNames().Where(x=>x.StartsWith($"..\\{ReferenceName}\\")).ToList();
 
         foreach (var name in names)
         {
@@ -135,7 +142,7 @@ public class BuildCommand : ICommand
             var stream = assembly.GetManifestResourceStream(name);
             if (stream != null)
             {
-                var path = tempFolder.CombinePath(name.TrimStart("..\\SingleExe\\"));
+                var path = tempFolder.CombinePath(name.TrimStart($"..\\{ReferenceName}\\"));
                 new FileInfo(path).DirectoryName.CreateDirectoryIfNotExist();
                 stream.SaveToFile(path);
                 stream.Dispose();
@@ -145,16 +152,16 @@ public class BuildCommand : ICommand
 
     void ReplaceProjectInformation(string tempFolder)
     {
-        var appXamlCs = tempFolder.CombinePath("App.xaml.cs");
+        var appXamlCs = tempFolder.CombinePath("Config.cs");
         var appXamlText = File.ReadAllText(appXamlCs);
-        appXamlText = appXamlText.Replace("Name = \"SampleApp\"", $"Name = \"{Name}\"");
+        appXamlText = appXamlText.Replace($"Name = \"{ReferenceName}\"", $"Name = \"{Name}\"");
         appXamlText = appXamlText.Replace("Version = \"1.0.0\"", $"Version = \"{AppVersion}\"");
-        appXamlText = appXamlText.Replace("EntryPoint = \"SampleApp.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
+        appXamlText = appXamlText.Replace($"EntryPoint = \"{ReferenceName}.exe\"", $"EntryPoint = \"{EntrypointPath}\"");
         File.WriteAllText(appXamlCs, appXamlText);
 
-        var csproj = tempFolder.CombinePath("SingleExe.csproj");
+        var csproj = tempFolder.CombinePath($"{ReferenceName}.csproj");
         var csprojText = File.ReadAllText(csproj);
-        csprojText = csprojText.Replace("<AssemblyName>myapp</AssemblyName>", $"<AssemblyName>{Name}</AssemblyName>");
+        csprojText = csprojText.Replace("<AssemblyName>MyApp</AssemblyName>", $"<AssemblyName>{Name}</AssemblyName>");
         File.WriteAllText(csproj, csprojText);
     }
 
@@ -206,7 +213,6 @@ public class BuildCommand : ICommand
 
     static void Clean(IConsole console, string tempFolder)
     {
-        console.WriteInformation("开始清理");
         if (Directory.Exists(tempFolder)) Directory.Delete(tempFolder, true);
         var parent = new DirectoryInfo(tempFolder).Parent;
         if (parent != null && parent.GetDirectories().IsNullOrEmpty() && parent.GetFiles().IsNullOrEmpty()) parent.Delete(true);

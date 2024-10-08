@@ -17,7 +17,7 @@
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
-		<Version>1.0.4</Version>
+		<Version>1.0.5</Version>
 		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<PackageReadmeFile>Nuget.md</PackageReadmeFile>
 		<AssemblyName>single-exe</AssemblyName>
@@ -51,7 +51,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="..\SingleExe\**\*" Link="Template\$([System.String]::new('%(RelativeDir)').Replace('..\SingleExe',''))%(FileName)%(Extension)" Exclude="..\SingleExe\bin\**\*;..\SingleExe\obj\**\*">
+		<EmbeddedResource Include="..\SingleExe.ConsoleApp\**\*" Link="Template-Console\$([System.String]::new('%(RelativeDir)').Replace('..\SingleExe.ConsoleApp',''))%(FileName)%(Extension)" Exclude="..\SingleExe.ConsoleApp\bin\**\*;..\SingleExe.ConsoleApp\obj\**\*">
+			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
+		</EmbeddedResource>
+		<EmbeddedResource Include="..\SingleExe.WpfApp\**\*" Link="Template-Wpf\$([System.String]::new('%(RelativeDir)').Replace('..\SingleExe.WpfApp',''))%(FileName)%(Extension)" Exclude="..\SingleExe.WpfApp\bin\**\*;..\SingleExe.WpfApp\obj\**\*">
 			<LogicalName>$([System.String]::new('%(RelativeDir)'))%(FileName)%(Extension)</LogicalName>
 		</EmbeddedResource>
 	</ItemGroup>

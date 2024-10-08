@@ -1,15 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<OutputType>WinExe</OutputType>
+		<OutputType>Exe</OutputType>
 		<TargetFramework>net472</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<UseWPF>true</UseWPF>
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
-		<AssemblyName>myapp</AssemblyName>
-		<!--<DebugType>none</DebugType>
-		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>-->
+		<AssemblyName>MyApp</AssemblyName>
+		<DebugType>none</DebugType>
+		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
 	</PropertyGroup>
 
 	<ItemGroup>
