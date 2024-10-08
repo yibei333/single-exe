@@ -81,6 +81,8 @@ public class BuildCommand : ICommand
             PrepareBinaryFiles(console, tempFolder);
             BuildProject(console, tempFolder);
             CopyFileToTarget(console, tempFolder);
+            CopyFileToTarget(console, tempFolder);
+            Clean(console, tempFolder);
         }
         catch (Exception ex)
         {
@@ -115,7 +117,7 @@ public class BuildCommand : ICommand
 
     string PrepareProject(IConsole console)
     {
-        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"SingleExe\\{Name}\\{AppVersion}");
+        var tempFolder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), $"SingleExe\\{Name}");
         tempFolder.CreateDirectoryIfNotExist();
         CopyProjectFiles(console, tempFolder);
         ReplaceProjectInformation(tempFolder);
@@ -200,5 +202,13 @@ public class BuildCommand : ICommand
         var targetPath = Output.CombinePath($"{Name}.exe");
         File.Copy(filePath, targetPath, true);
         console.WriteSuccess($"生成成功,文件位置'{targetPath}'");
+    }
+
+    static void Clean(IConsole console, string tempFolder)
+    {
+        console.WriteInformation("开始清理");
+        if (Directory.Exists(tempFolder)) Directory.Delete(tempFolder, true);
+        var parent = new DirectoryInfo(tempFolder).Parent;
+        if (parent != null && parent.GetDirectories().IsNullOrEmpty() && parent.GetFiles().IsNullOrEmpty()) parent.Delete(true);
     }
 }
