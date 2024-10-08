@@ -41,9 +41,13 @@ public partial class MainWindow : Window
                 }
 
                 if (!File.Exists(exePath)) throw new Exception($"file not found:{exePath}");
+                string[] args = new string[0];
+                var environmentArgs = Environment.GetCommandLineArgs();
+                if (environmentArgs.Length > 0) args = environmentArgs.Skip(1).ToArray();
+
                 var process = new Process
                 {
-                    StartInfo = new ProcessStartInfo(exePath, string.Join(" ", Environment.GetCommandLineArgs()))
+                    StartInfo = new ProcessStartInfo(exePath, string.Join(" ", args))
                     {
                         WorkingDirectory = new FileInfo(exePath).DirectoryName,
                         CreateNoWindow = true
@@ -52,7 +56,7 @@ public partial class MainWindow : Window
                 process.Start();
 
                 if (!File.Exists(versionFile)) File.WriteAllText(versionFile, App.Version);
-                Application.Current.Shutdown();
+                Dispatcher.Invoke(() => Application.Current.Shutdown());
             }
             catch (Exception ex)
             {

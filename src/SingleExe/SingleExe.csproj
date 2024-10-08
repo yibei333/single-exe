@@ -8,8 +8,8 @@
 		<LangVersion>10</LangVersion>
 		<ApplicationIcon>favicon.ico</ApplicationIcon>
 		<AssemblyName>myapp</AssemblyName>
-		<DebugType>none</DebugType>
-		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>
+		<!--<DebugType>none</DebugType>
+		<GenerateSupportedRuntime>False</GenerateSupportedRuntime>-->
 	</PropertyGroup>
 
 	<ItemGroup>
